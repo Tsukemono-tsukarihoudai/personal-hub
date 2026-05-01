@@ -1,0 +1,33 @@
+name: Feed Delivery
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日 UTC 00:00（JST 09:00）
+  workflow_dispatch:
+
+jobs:
+  feed:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/idea-api
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: packages/idea-api/package-lock.json
+
+      - run: npm ci
+
+      - run: npx tsx scripts/feed.ts
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SLACK_WEBHOOK_URL:    ${{ secrets.SLACK_WEBHOOK_URL }}
+          W_p:                  ${{ secrets.W_p }}
+          W_t:                  ${{ secrets.W_t }}
+          W_t_max:              ${{ secrets.W_t_max }}

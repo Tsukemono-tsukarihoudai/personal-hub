@@ -1,0 +1,16 @@
+name               = "personal-hub-wardrobe-api"
+main               = "src/index.ts"
+compatibility_date = "2024-11-06"
+compatibility_flags = ["nodejs_compat"]
+
+[[r2_buckets]]
+binding     = "R2"
+bucket_name = "personal-hub"
+
+# シークレットは wrangler secret put で登録すること
+# wrangler secret put SUPABASE_URL
+# wrangler secret put SUPABASE_SERVICE_KEY
+# wrangler secret put R2_PUBLIC_URL   # R2カスタムドメインまたは公開URL
+
+# 不要（R2 binding方式では使わない）：
+#   R2_ENDPOINT / R2_BUCKET_NAME / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY

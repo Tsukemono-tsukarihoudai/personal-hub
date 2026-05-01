@@ -1,0 +1,8 @@
+name               = "personal-hub-idea-api"
+main               = "src/index.ts"
+compatibility_date = "2024-11-06"
+compatibility_flags = ["nodejs_compat"]
+
+# シークレットは wrangler secret put で登録すること
+# wrangler secret put SUPABASE_URL
+# wrangler secret put SUPABASE_SERVICE_KEY
