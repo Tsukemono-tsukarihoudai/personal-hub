@@ -17,6 +17,9 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,12 +37,9 @@ jobs:
           cache-dependency-path: packages/frontend/package-lock.json
 
       - run: npm ci
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - run: npm run build
         env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
           VITE_SUPABASE_URL:      ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
           VITE_IDEA_API_URL:      ${{ secrets.VITE_IDEA_API_URL }}
