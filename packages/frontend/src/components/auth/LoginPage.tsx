@@ -22,7 +22,7 @@ export default function LoginPage() {
 
         const { error } = await supabase.auth.signInWithOtp({
             email,
-            options: { emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}` },
+            options: { emailRedirectTo: 'https://tsukemono-tsukarihoudai.github.io/personal-hub/#/auth/callback' },
         })
 
         if (error) setError(error.message)

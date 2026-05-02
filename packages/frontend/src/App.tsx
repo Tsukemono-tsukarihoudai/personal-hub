@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import Layout from './components/layout/Layout'
 import LoginPage from './components/auth/LoginPage'
+import AuthCallback from './components/auth/AuthCallback'
 import Dashboard from './components/dashboard/Dashboard'
 import IdeasPage from './components/ideas/IdeasPage'
 import WardrobePage from './components/wardrobe/WardrobePage'
@@ -19,6 +20,7 @@ export default function App() {
         <HashRouter>
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route
                     path="/"
                     element={
