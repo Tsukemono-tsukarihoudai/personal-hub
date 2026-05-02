@@ -6,10 +6,10 @@ export default function AuthCallback() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
                 navigate('/', { replace: true })
-            } else {
+            } else if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
                 navigate('/login', { replace: true })
             }
         })
