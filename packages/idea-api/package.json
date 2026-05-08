@@ -3,17 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev":    "wrangler dev",
+    "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "feed":   "tsx scripts/feed.ts"
+    "feed": "tsx scripts/feed.ts",
+    "migrate:wardrobe": "dotenv -e .env.migrate tsx scripts/migrate-wardrobe.ts"
   },
   "dependencies": {
+    "@notionhq/client": "^2.3.0",
     "@supabase/supabase-js": "^2.45.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241106.0",
-    "tsx":        "^4.19.2",
+    "dotenv-cli": "^11.0.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "wrangler":   "^3.91.0"
+    "wrangler": "^3.91.0"
   }
 }

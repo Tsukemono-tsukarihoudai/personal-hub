@@ -2,7 +2,7 @@ import { verifyJwt } from './auth'
 import {
     listWardrobe, getWardrobeItem, getRelatedOutfits,
     createWardrobeItem, updateWardrobeItem, deleteWardrobeItem,
-    uploadImage, deleteImage,
+    uploadImage, deleteImage, getImage,
 } from './handlers/wardrobe'
 import {
     listOutfits, getOutfit, createOutfit, updateOutfit, deleteOutfit,
@@ -32,13 +32,8 @@ export default {
             return new Response(null, { status: 204, headers: CORS_HEADERS })
         }
 
-        const authenticated = await verifyJwt(request, env)
-        if (!authenticated) {
-            return withCors(new Response(
-                JSON.stringify({ error: 'Unauthorized' }),
-                { status: 401, headers: { 'Content-Type': 'application/json' } },
-            ))
-        }
+        const authError = await verifyJwt(request, env)
+        if (authError) return withCors(authError)
 
         const path = new URL(request.url).pathname
         let response: Response
@@ -57,6 +52,9 @@ export default {
 
             if (wardrobeOutfits && method === 'GET') {
                 response = await getRelatedOutfits(wardrobeOutfits[1]!, env)
+
+            } else if (wardrobeImage && method === 'GET') {
+                response = await getImage(wardrobeImage[1]!, env)
 
             } else if (wardrobeImage && method === 'POST') {
                 response = await uploadImage(wardrobeImage[1]!, request, env)

@@ -4,6 +4,7 @@ import { Plus, X } from 'lucide-react'
 import { outfitsApi, wardrobeApi } from '../../lib/api'
 import { useWeather } from '../../hooks/useWeather'
 import type { Outfit, OutfitOccasion, WardrobeItem } from '../../types'
+import { WardrobeImage } from '../WardrobeImage'
 
 const OCCASIONS: OutfitOccasion[] = ['casual', 'office', 'formal', 'sport', 'outdoor', 'other']
 
@@ -14,7 +15,7 @@ function OutfitCard({ outfit, onClick }: { outfit: Outfit; onClick: () => void }
             <div className="flex flex-wrap gap-0.5 p-1.5 bg-muted min-h-[80px]">
                 {outfit.items.slice(0, 4).map(item => (
                     item.image_url
-                        ? <img key={item.id} src={item.image_url} alt={item.name}
+                        ? <WardrobeImage key={item.id} itemId={item.id} alt={item.name}
                                 className="w-10 h-10 rounded object-cover" />
                         : <div key={item.id} className="w-10 h-10 rounded bg-background flex items-center justify-center text-[10px] text-muted-foreground">
                             {item.category}
@@ -132,7 +133,7 @@ function OutfitPanel({ outfit, onClose, onSaved }: { outfit: Outfit; onClose: ()
                             {outfit.items.map(item => (
                                 <div key={item.id} className="relative">
                                     {item.image_url
-                                        ? <img src={item.image_url} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
+                                        ? <WardrobeImage itemId={item.id} alt={item.name} className="w-16 h-16 rounded-lg object-cover" />
                                         : <div className="w-16 h-16 rounded-lg bg-muted flex items-center justify-center text-xs text-muted-foreground">{item.category}</div>
                                     }
                                     <button
@@ -160,7 +161,7 @@ function OutfitPanel({ outfit, onClose, onSaved }: { outfit: Outfit; onClose: ()
                                     <button key={w.id} onClick={() => addItem(w)}
                                         className="w-full text-left flex items-center gap-2 text-sm px-2 py-1 hover:bg-muted rounded-md">
                                         {w.image_url
-                                            ? <img src={w.image_url} alt="" className="w-8 h-8 rounded object-cover shrink-0" />
+                                            ? <WardrobeImage itemId={w.id} className="w-8 h-8 rounded object-cover shrink-0" />
                                             : <div className="w-8 h-8 rounded bg-muted shrink-0" />}
                                         <span className="truncate">{w.name}</span>
                                     </button>

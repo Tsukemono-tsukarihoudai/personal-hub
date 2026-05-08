@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { X, Upload } from 'lucide-react'
 import { wardrobeApi } from '../../lib/api'
 import type { WardrobeItem, WardrobeCategory, Outfit } from '../../types'
+import { WardrobeImage } from '../WardrobeImage'
 
 interface Props {
     item:    WardrobeItem | null
@@ -48,7 +49,8 @@ export default function WardrobeModal({ item, onClose, onSaved }: Props) {
     const [seasons,  setSeasons]  = useState<string[]>(item?.seasons ?? [])
     const [tags,     setTags]     = useState<string[]>(item?.tags ?? [])
     const [notes,    setNotes]    = useState(item?.notes ?? '')
-    const [imageUrl, setImageUrl] = useState(item?.image_url ?? null)
+    const [imageVersion, setImageVersion] = useState(0)
+    const hasImage = !!(item?.image_url) || imageVersion > 0
     const [saving,   setSaving]   = useState(false)
     const [error,    setError]    = useState<string | null>(null)
     const fileRef = useRef<HTMLInputElement>(null)
@@ -63,8 +65,8 @@ export default function WardrobeModal({ item, onClose, onSaved }: Props) {
         const file = e.target.files?.[0]
         if (!file || !item) return
         try {
-            const { image_url } = await wardrobeApi.uploadImage(item.id, file)
-            setImageUrl(image_url)
+            await wardrobeApi.uploadImage(item.id, file)
+            setImageVersion(v => v + 1)
         } catch (e) {
             setError((e as Error).message)
         }
@@ -112,8 +114,8 @@ export default function WardrobeModal({ item, onClose, onSaved }: Props) {
 
                     {/* 画像 */}
                     <div className="flex flex-col items-center gap-2">
-                        {imageUrl
-                            ? <img src={imageUrl} alt="" className="w-full max-h-48 object-cover rounded-xl" />
+                        {hasImage && item
+                            ? <WardrobeImage itemId={item.id} version={imageVersion} className="w-full max-h-48 object-cover rounded-xl" />
                             : <div className="w-full h-36 bg-muted rounded-xl flex items-center justify-center text-muted-foreground">
                                 <Upload size={24} />
                               </div>

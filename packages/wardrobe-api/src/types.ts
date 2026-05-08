@@ -31,6 +31,7 @@ export interface Outfit {
 export interface Env {
     SUPABASE_URL:         string
     SUPABASE_SERVICE_KEY: string
+    ALLOWED_EMAIL?:       string
     R2_PUBLIC_URL:        string   // R2カスタムドメインまたは公開URL（例: https://pub.example.com）
     R2:                   R2Bucket // Cloudflare Workers R2 binding
 }

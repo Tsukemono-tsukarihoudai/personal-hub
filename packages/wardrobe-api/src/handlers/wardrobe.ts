@@ -1,5 +1,5 @@
 import { createDb } from '../db'
-import { putObject, deleteObject, keyFromPublicUrl } from '../r2'
+import { putObject, deleteObject, imageKey } from '../r2'
 import type { Env } from '../types'
 
 const json = (data: unknown, status = 200) =>
@@ -25,6 +25,25 @@ export async function listWardrobe(request: Request, env: Env): Promise<Response
     const { data, error } = await query.order('created_at', { ascending: false })
     if (error) return err(error.message, 500)
     return json(data)
+}
+
+// GET /wardrobe/:id/image  →  R2 binding 経由で画像を返す
+export async function getImage(id: string, env: Env): Promise<Response> {
+    const { data: item, error } = await createDb(env)
+        .from('wardrobe_items')
+        .select('image_url')
+        .eq('id', id)
+        .single()
+    if (error || !item.image_url) return new Response(null, { status: 404 })
+
+    const key = imageKey(item.image_url, env)
+    const obj = await env.R2.get(key)
+    if (!obj) return new Response(null, { status: 404 })
+
+    const headers = new Headers()
+    obj.writeHttpMetadata(headers)
+    headers.set('Cache-Control', 'private, max-age=3600')
+    return new Response(obj.body, { headers })
 }
 
 // GET /wardrobe/:id
@@ -95,7 +114,7 @@ export async function deleteWardrobeItem(id: string, env: Env): Promise<Response
     // R2画像削除（失敗したらDB削除もしない）
     if (item.image_url) {
         try {
-            await deleteObject(env, keyFromPublicUrl(env, item.image_url))
+            await deleteObject(env, imageKey(item.image_url, env))
         } catch (e) {
             return err(`R2 delete failed: ${(e as Error).message}`, 500)
         }
@@ -134,7 +153,7 @@ export async function uploadImage(id: string, request: Request, env: Env): Promi
         .eq('id', id)
         .single()
     if (existing?.image_url) {
-        await deleteObject(env, keyFromPublicUrl(env, existing.image_url)).catch(() => {})
+        await deleteObject(env, imageKey(existing.image_url, env)).catch(() => {})
     }
 
     const { error } = await db
@@ -159,7 +178,7 @@ export async function deleteImage(id: string, env: Env): Promise<Response> {
     if (!item.image_url) return err('No image to delete', 404)
 
     try {
-        await deleteObject(env, keyFromPublicUrl(env, item.image_url))
+        await deleteObject(env, imageKey(item.image_url, env))
     } catch (e) {
         return err(`R2 delete failed: ${(e as Error).message}`, 500)
     }

@@ -4,6 +4,7 @@ import { Plus, Loader2 } from 'lucide-react'
 import { wardrobeApi } from '../../lib/api'
 import type { WardrobeItem, WardrobeCategory } from '../../types'
 import WardrobeModal from './WardrobeModal'
+import { WardrobeImage } from '../WardrobeImage'
 
 const CATEGORIES: WardrobeCategory[] = ['tops', 'bottoms', 'outer', 'shoes', 'accessory', 'bag', 'other']
 
@@ -73,7 +74,7 @@ export default function WardrobePage() {
                         className="rounded-xl border overflow-hidden text-left hover:shadow-md transition-shadow"
                     >
                         {item.image_url
-                            ? <img src={item.image_url} alt={item.name} className="w-full aspect-square object-cover" />
+                            ? <WardrobeImage itemId={item.id} alt={item.name} className="w-full aspect-square object-cover" />
                             : <div className="w-full aspect-square bg-muted flex items-center justify-center text-muted-foreground text-xs">{item.category ?? '―'}</div>
                         }
                         <div className="p-2">
