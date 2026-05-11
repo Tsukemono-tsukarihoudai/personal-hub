@@ -25,15 +25,8 @@ export default {
         }
 
         // Auth
-        const authenticated = await verifyJwt(request, env)
-        if (!authenticated) {
-            return withCors(
-                new Response(JSON.stringify({ error: 'Unauthorized' }), {
-                    status: 401,
-                    headers: { 'Content-Type': 'application/json' },
-                }),
-            )
-        }
+        const authError = await verifyJwt(request, env)
+        if (authError) return withCors(authError)
 
         // Routing
         const url            = new URL(request.url)

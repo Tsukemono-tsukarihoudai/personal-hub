@@ -16,9 +16,9 @@ export default function Layout() {
             <nav className="
                 flex md:flex-col
                 md:w-16 md:h-full
-                border-r border-border
+                border-r border-sidebar-border
                 fixed md:static bottom-0 left-0 right-0 md:bottom-auto
-                bg-background z-20
+                bg-sidebar z-20
                 md:py-4 py-2 px-4 md:px-0
                 justify-around md:justify-start md:gap-1
             ">

@@ -23,4 +23,5 @@ export interface Item {
 export interface Env {
     SUPABASE_URL:         string
     SUPABASE_SERVICE_KEY: string
+    ALLOWED_EMAIL?:       string
 }
